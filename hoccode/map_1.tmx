@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" backgroundcolor="#808080" nextobjectid="1">
+ <tileset firstgid="1" name="0b1aa1d1f0a9cc9b97c24589902a6bd0" tilewidth="32" tileheight="32">
+  <image source="0b1aa1d1f0a9cc9b97c24589902a6bd0.jpg" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="65" name="png-clipart-furniture-illustration-table-floor-plan-tile-based-video-game-2d-computer-graphics-furniture-table-game-text" tilewidth="32" tileheight="32">
+  <image source="png-clipart-furniture-illustration-table-floor-plan-tile-based-video-game-2d-computer-graphics-furniture-table-game-text.png" width="900" height="1002"/>
+  <terraintypes>
+   <terrain name="New Terrain" tile="-1"/>
+   <terrain name="New Terrain" tile="-1"/>
+  </terraintypes>
+  <tile id="34" terrain=",,,1"/>
+  <tile id="35" terrain=",,1,1"/>
+  <tile id="36" terrain=",,1,1"/>
+  <tile id="62" terrain=",1,,1"/>
+  <tile id="63" terrain="1,1,1,1"/>
+  <tile id="64" terrain="1,1,1,1"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt0cEJACAQwLDD/Yd2BhGxjwQ6QWcAAAD+Wgfxnh8tfrT40eJHix8tfgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANzZLlQAmw==
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="100" height="100" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt0cENgCAURMFPE4JtqPTfGtuFJMwk777JVgEAAOzlalU9jXS3v9fw5IM3fWn6AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4wAIZrAE1
+  </data>
+ </layer>
+</map>
