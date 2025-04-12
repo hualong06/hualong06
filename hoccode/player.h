@@ -2,7 +2,10 @@
 #define PLAYER_H
 
 #include "commonfunc.h"
-#include "map.h"
+
+struct tileMap;
+struct base_object;
+struct warning;
 
 struct player {
     int x, y;
@@ -19,6 +22,6 @@ struct player {
 void initPlayer(player &p, SDL_Renderer* &renderer);
 void handleEvents(bool &running, player &p, int &new_x, int &new_y);
 void update(player &p, int &new_x, int &new_y, tileMap &map, warning &warning_);
-void rederPlayer(SDL_Renderer* &renderer, player &p);
+void renderPlayer(SDL_Renderer* &renderer, SDL_Rect &camera, player &p);
 
 #endif

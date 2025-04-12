@@ -46,23 +46,8 @@ void renderEndGame(SDL_Renderer* &renderer, string &status) {
 
 }
 
-void render(SDL_Renderer* &renderer, player &p, object &safe, warning &warning_, tileMap &map) {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderClear(renderer);
-
-    SDL_Rect mapRect = {-16*90, -16*50, map.mapWidth, map.mapHeight};
-    if(map.texture != NULL) {
-        SDL_RenderCopy(renderer, map.texture, NULL, &mapRect);
-    }
-    /*
-    SDL_Rect safeRect = {safe.x, safe.y, safe.width, safe.height};
-    if(safe.texture != NULL) {
-
-        SDL_RenderCopy(renderer, safe.texture, NULL, &safeRect); 
-    }
-    */
+void renderWarning(SDL_Renderer* &renderer, warning &warning_){
     
-
     SDL_Rect warningRect = {warning_.x, warning_.y, warning_.direction, warning_.height};
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderDrawRect(renderer, &warningRect);
@@ -71,7 +56,7 @@ void render(SDL_Renderer* &renderer, player &p, object &safe, warning &warning_,
 
     SDL_RenderPresent(renderer);
 }
-
+/*
 void interact(SDL_Renderer *renderer, player &p, tileMap &map, string &status, icon &icon_) {
     if(map.gameMap[p.y/64][p.x/64] == 2) {
         status = "True";
@@ -87,7 +72,7 @@ void endGame(SDL_Renderer* renderer, warning &warning_, string &status, tileMap 
     }
     else if(warning_.direction <= 100 && map.gameMap[p.y/64][p.x/64] == 9) {
         status = "You_Win";
-        rederEngGame(renderer, status);
+        renderEngGame(renderer, status);
     }
 
 }
@@ -105,3 +90,4 @@ void renderInteract(SDL_Renderer* &renderer, icon &icon_) {
 
     SDL_RenderPresent(renderer);
 }
+*/

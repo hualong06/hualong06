@@ -2,8 +2,8 @@
 #define MAP_H
 
 #include "commonfunc.h"
-#include "player.h"
 
+struct player;
 
 struct tileMap {
     int tileSize;
@@ -16,7 +16,7 @@ struct tileMap {
 
 void initTileMap(tileMap &map, SDL_Renderer* &renderer);
 bool loadMap(tileMap &map);
-void renderMap(SDL_Renderer* &renderer, tileMap &map);
-
+void renderMap(SDL_Renderer* &renderer,SDL_Rect &camera, tileMap &map, player &p);
+void updateCamera(SDL_Rect &camera, player &p, tileMap &map);
 
 #endif

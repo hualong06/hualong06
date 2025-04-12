@@ -1,6 +1,7 @@
 #include "commonfunc.h"
 #include "player.h"
-
+#include "base_object.h"
+#include "map.h"
 
 void initPlayer(player &p, SDL_Renderer* &renderer) {
     p.x = 58*16;
@@ -64,11 +65,14 @@ void update(player &p, int &new_x, int &new_y, tileMap &map, warning &warning_) 
             p.y = new_y;
         }
     }
+    else{
+        
+    }
 }
 
-void rederPlayer(SDL_Renderer* &renderer, player &p){
+void renderPlayer(SDL_Renderer* &renderer, SDL_Rect &camera, player &p){
 
-    SDL_Rect playerRect = { p.x, p.y, p.width, p.height };
+    SDL_Rect playerRect = { p.x - camera.x, p.y - camera.y, p.width, p.height };
 
     if (p.texture != NULL) {
         SDL_Rect frameRect;

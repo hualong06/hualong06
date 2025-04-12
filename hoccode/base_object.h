@@ -2,6 +2,8 @@
 #define BASE_OBJECT_H
 
 #include "commonfunc.h"
+#include "player.h"
+#include "map.h"
 
 struct object {
     int x, y;
@@ -33,6 +35,7 @@ struct icon {
 void initObject(object &safe, SDL_Renderer* &renderer);
 void initwarning(warning &warning_);
 void initIcon(icon &icon_, SDL_Renderer* &renderer);
+void renderWarning(SDL_Renderer* &renderer, warning &warning_);
 
 
 
