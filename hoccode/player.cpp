@@ -4,8 +4,8 @@
 #include "map.h"
 
 void initPlayer(player &p, SDL_Renderer* &renderer) {
-    p.x = 58*16;
-    p.y = 49*16;
+    p.x = 30*16;
+    p.y = 23*16;
     p.width = 93*4/3;
     p.height = 96*4/3;
     p.speed = 30;
@@ -49,30 +49,38 @@ void handleEvents(bool &running, player &p, int &new_x, int &new_y) {
         }
     }
 }
-
 void update(player &p, int &new_x, int &new_y, tileMap &map, warning &warning_) {
-    int tile_x = new_x / map.tileSize;
-    int tile_y = new_y / map.tileSize;
+    // Tính chỉ số tile của vùng player sẽ di chuyển đến
+    int tile_x1 = new_x / map.tileSize;
+    int tile_y1 = new_y / map.tileSize;
     int tile_x2 = (new_x + p.width - 1) / map.tileSize;
     int tile_y2 = (new_y + p.height - 1) / map.tileSize;
-    
-    if (tile_x >= 0 && tile_x2 < map.mapWidth && tile_y >= 0 && tile_y2 < map.mapHeight) {
-        if (map.gameMap[tile_y][tile_x] != 0 && map.gameMap[tile_y][tile_x2] != 0 &&
-            map.gameMap[tile_y2][tile_x] != 0 && map.gameMap[tile_y2][tile_x2] != 0) {
-            
-            warning_.direction += (abs(new_x - p.x) + abs(new_y - p.y))/10;
-            p.x = new_x;    
+
+    // Tính số lượng ô tile theo chiều ngang và dọc
+    int maxTileX = map.mapWidth / map.tileSize;
+    int maxTileY = map.mapHeight / map.tileSize;
+
+    // Kiểm tra xem vùng player mới có nằm trong bản đồ hay không
+    if (tile_x1 >= 0 && tile_x2 < maxTileX && tile_y1 >= 0 && tile_y2 < maxTileY) {
+        // Kiểm tra va chạm - bạn có thể điều chỉnh điều kiện này tùy cách map của bạn mã hóa
+        if (
+            map.gameMap[tile_y1][tile_x1] != 0 &&
+            map.gameMap[tile_y1][tile_x2] != 0 &&
+            map.gameMap[tile_y2][tile_x1] != 0 &&
+            map.gameMap[tile_y2][tile_x2] != 0
+        ) {
+            // Cập nhật vị trí nếu không va chạm
+            warning_.direction += (abs(new_x - p.x) + abs(new_y - p.y)) / 100;
+            p.x = new_x;
             p.y = new_y;
         }
     }
-    else{
-        
-    }
 }
 
-void renderPlayer(SDL_Renderer* &renderer, SDL_Rect &camera, player &p){
 
-    SDL_Rect playerRect = { p.x - camera.x, p.y - camera.y, p.width, p.height };
+void renderPlayer(SDL_Renderer* &renderer, player &p){
+
+    SDL_Rect playerRect = { p.x, p.y, p.width, p.height };
 
     if (p.texture != NULL) {
         SDL_Rect frameRect;

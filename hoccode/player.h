@@ -22,6 +22,6 @@ struct player {
 void initPlayer(player &p, SDL_Renderer* &renderer);
 void handleEvents(bool &running, player &p, int &new_x, int &new_y);
 void update(player &p, int &new_x, int &new_y, tileMap &map, warning &warning_);
-void renderPlayer(SDL_Renderer* &renderer, SDL_Rect &camera, player &p);
+void renderPlayer(SDL_Renderer* &renderer, player &p);
 
 #endif

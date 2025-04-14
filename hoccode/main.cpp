@@ -61,8 +61,6 @@ void gameLoop(SDL_Window* &window, SDL_Renderer* &renderer) {
     tileMap map;
     icon icon_;
 
-    SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-    
     initPlayer(p, renderer);
     initObject(safe, renderer);
     initwarning(warning_);
@@ -75,28 +73,58 @@ void gameLoop(SDL_Window* &window, SDL_Renderer* &renderer) {
     }
 
     bool running = true;
-    string satatus = "False";
+    GameState state = MENU;
+    string status = "False";
 
-    while (running) {
-        int new_x = p.x;
-        int new_y = p.y;
+    int new_x = p.x;
+    int new_y = p.y;
 
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderClear(renderer);
-        renderMap(renderer, camera, map, p);
-        renderPlayer(renderer, camera, p);
-        SDL_RenderPresent(renderer);
-
-        handleEvents(running, p, new_x, new_y);
-        update(p, new_x, new_y, map, warning_);
-        updateCamera(camera, p, map);
-        SDL_Delay(1000 / 32);
-
-
+    if (TTF_Init() == -1) {
+        cerr << "Failed to initialize TTF: " << TTF_GetError() << endl;
+        return;
+    }
+    TTF_Font* font = TTF_OpenFont("arial.ttf", 24);
+    if (!font) {
+        cerr << "Failed to load font: " << TTF_GetError() << endl;
+        return;
     }
 
-    clean(window, renderer, p, safe, map, icon_);
+    while (running) {
+        if (state == MENU) {
+            renderMenu(renderer, font);
 
+            SDL_Event event;
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_QUIT) {
+                    running = false;
+                }
+                if (event.type == SDL_KEYDOWN) {
+                    switch (event.key.keysym.sym) {
+                        case SDLK_1:
+                            state = PLAYING;
+                            break;
+                        case SDLK_2:
+                            running = false;
+                            break;
+                    }
+                }
+            }
+        } else if (state == PLAYING) {
+            handleEvents(running, p, new_x, new_y);
+            update(p, new_x, new_y, map, warning_);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderClear(renderer);
+            renderMap(renderer, map, p);
+            renderWarning(renderer, warning_);
+            renderPlayer(renderer, p);
+            SDL_RenderPresent(renderer);
+            SDL_Delay(1000 / 32);
+        }
+    }
+
+    TTF_CloseFont(font);
+    TTF_Quit();
+    clean(window, renderer, p, safe, map, icon_);
 }
 
 int main(int argc, char* argv[]) {
