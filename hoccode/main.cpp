@@ -31,7 +31,7 @@ bool init(SDL_Window* &window, SDL_Renderer* &renderer) {
     return true;
 }
 
-void clean(SDL_Window* &window, SDL_Renderer* &renderer, player &p, object &safe, tileMap &map, icon &icon_) {
+void clean(SDL_Window* &window, SDL_Renderer* &renderer, player &p, object &safe, tileMap &map, icon &icon_, menu &Menu) {
     if(p.texture != NULL) {
         SDL_DestroyTexture(p.texture);
         p.texture = NULL;
@@ -60,17 +60,18 @@ void gameLoop(SDL_Window* &window, SDL_Renderer* &renderer) {
     warning warning_;
     tileMap map;
     icon icon_;
+    icon gold;
+    menu Menu;
 
     initPlayer(p, renderer);
     initObject(safe, renderer);
     initwarning(warning_);
     initTileMap(map, renderer);
     initIcon(icon_, renderer);
+    initMenu(Menu, renderer);
+    initGold(gold, renderer);
 
-    if (!loadMap(map)) {  
-        cerr << "Failed to load map!" << endl;
-        return;
-    }
+    loadMap(map);
 
     bool running = true;
     GameState state = MENU;
@@ -79,19 +80,11 @@ void gameLoop(SDL_Window* &window, SDL_Renderer* &renderer) {
     int new_x = p.x;
     int new_y = p.y;
 
-    if (TTF_Init() == -1) {
-        cerr << "Failed to initialize TTF: " << TTF_GetError() << endl;
-        return;
-    }
-    TTF_Font* font = TTF_OpenFont("arial.ttf", 24);
-    if (!font) {
-        cerr << "Failed to load font: " << TTF_GetError() << endl;
-        return;
-    }
-
     while (running) {
         if (state == MENU) {
-            renderMenu(renderer, font);
+
+            renderMenu(renderer, Menu);
+            SDL_RenderPresent(renderer);
 
             SDL_Event event;
             while (SDL_PollEvent(&event)) {
@@ -110,21 +103,27 @@ void gameLoop(SDL_Window* &window, SDL_Renderer* &renderer) {
                 }
             }
         } else if (state == PLAYING) {
-            handleEvents(running, p, new_x, new_y);
-            update(p, new_x, new_y, map, warning_);
+            
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
             SDL_RenderClear(renderer);
-            renderMap(renderer, map, p);
+            renderMap(renderer, map);
             renderWarning(renderer, warning_);
             renderPlayer(renderer, p);
+            renderGold(renderer, gold);
+
+            handleEvents(running, p, new_x, new_y);
+            update(p, new_x, new_y, map, warning_);
+            updateGold(renderer, p, map, gold);
+
             SDL_RenderPresent(renderer);
             SDL_Delay(1000 / 32);
+
         }
     }
 
-    TTF_CloseFont(font);
+    TTF_CloseFont(Menu.font);
     TTF_Quit();
-    clean(window, renderer, p, safe, map, icon_);
+    clean(window, renderer, p, safe, map, icon_, Menu);
 }
 
 int main(int argc, char* argv[]) {
@@ -137,7 +136,7 @@ int main(int argc, char* argv[]) {
     }
 
     gameLoop(window, renderer);
-
+    
     return 0;
     
 }

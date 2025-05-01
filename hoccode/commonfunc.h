@@ -7,13 +7,14 @@
 #include <time.h>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <SDL2\SDL.h>
 #include <SDL2\SDL_image.h>
 #include <SDL2\SDL_ttf.h>
 
 using namespace std;
 
-const int SCREEN_WIDTH = 16*80;
-const int SCREEN_HEIGHT = 16*45;
+const int SCREEN_WIDTH = 16*64;
+const int SCREEN_HEIGHT = 16*36;
 
 #endif
