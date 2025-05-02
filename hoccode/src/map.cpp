@@ -8,7 +8,7 @@ void initTileMap(tileMap &map, SDL_Renderer* &renderer) {
     map.mapHeight = 16*36;
     map.tileMapWidth = 64;
     map.tileMapHeight = 36;
-    map.texture = IMG_LoadTexture(renderer, "LIVIROOM.png");
+    map.texture = IMG_LoadTexture(renderer, "images/LIVIROOM.png");
     if(map.texture == NULL) {
         cerr << "Failed to load map texture SDL_Error:" << SDL_GetError() << endl;
     }

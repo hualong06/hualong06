@@ -10,12 +10,12 @@ void initPlayer(player &p, SDL_Renderer* &renderer) {
     p.height = 96 * 4 / 3;
     p.speed = 16;
 
-    p.texture = IMG_LoadTexture(renderer, "thief.png");
+    p.texture = IMG_LoadTexture(renderer, "images/thief.png");
     if (p.texture == NULL) {
         cerr << "Failed to load player texture! SDL_Error: " << SDL_GetError() << endl;
     }
 
-    p.diagonalTexture = IMG_LoadTexture(renderer, "thief_diagonal.png");
+    p.diagonalTexture = IMG_LoadTexture(renderer, "images/thief_diagonal.png");
     if (p.diagonalTexture == NULL) {
         cerr << "Failed to load diagonal texture! SDL_Error: " << SDL_GetError() << endl;
     }

@@ -8,7 +8,7 @@ void initObject(object &safe, SDL_Renderer* &renderer) {
     safe.y = 4*64;
     safe.width = 128;
     safe.height = 128;
-    safe.texture = IMG_LoadTexture(renderer, "safe.jpg");
+    safe.texture = IMG_LoadTexture(renderer, "images/safe.jpg");
     if(safe.texture == NULL) {
         cerr << "Failed to load fase textrue SDL_Error:" << SDL_GetError() << endl;
     }
@@ -33,7 +33,7 @@ void initIcon(icon &icon_, SDL_Renderer* &renderer) {
     icon_.frameHeight = 320;
     icon_.currentFrame = 0;
     icon_.count = 4;
-    icon_.texture = IMG_LoadTexture(renderer, "suggest.png");
+    icon_.texture = IMG_LoadTexture(renderer, "images/suggest.png");
     if(icon_.texture == NULL) {
         cerr << "Failed to load icon texture SDL_Error:" << SDL_GetError() << endl;
     }
@@ -45,18 +45,18 @@ void initGold(icon &gold, SDL_Renderer* &renderer){
     gold.width = 32;
     gold.height = 32;
     gold.count = 0;
-    gold.texture = IMG_LoadTexture(renderer, "gold.png");
+    gold.texture = IMG_LoadTexture(renderer, "images/gold.png");
     if(gold.texture == NULL) {
         cerr << "Failed to load gold texture SDL_Error:" << SDL_GetError() << endl;
     }
 }
 
 void initMenu(menu &Menu, SDL_Renderer* &renderer){
-    Menu.textrueMenu = IMG_LoadTexture(renderer, "menu.png");
+    Menu.textrueMenu = IMG_LoadTexture(renderer, "images/menu.png");
     if(Menu.textrueMenu == NULL){
         cerr << "Failed to load menu texture: " << IMG_GetError() << endl;        return;
     }
-    Menu.textrueMap = IMG_LoadTexture(renderer, "Map.png");
+    Menu.textrueMap = IMG_LoadTexture(renderer, "images/Map.png");
     if (Menu.textrueMap == NULL) {  
         cerr << "Failed to load map texture: " << IMG_GetError() << endl;
     }
@@ -81,7 +81,8 @@ void renderEndGame(SDL_Renderer* &renderer, string &status) {
 
 void renderWarning(SDL_Renderer* &renderer, warning &warning_){
     
-    SDL_Rect warningRect = {warning_.x, warning_.y, warning_.direction, warning_.height};        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_Rect warningRect = {warning_.x, warning_.y, warning_.direction, warning_.height};
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderDrawRect(renderer, &warningRect);
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         SDL_RenderFillRect(renderer, &warningRect);
@@ -215,7 +216,7 @@ void updateGold(SDL_Renderer* &renderer, player &p, tileMap &map, icon &gold){
 
     if(map.gameMap[tileY][tileX] >= 10) {
         SDL_Event event;
-        SDL_Texture* texture = IMG_LoadTexture(renderer, "TaskArrow.png");
+        SDL_Texture* texture = IMG_LoadTexture(renderer, "images/TaskArrow.png");
         SDL_Rect iconRect = { p.x, p.y, 32, 32};
         
         SDL_RenderCopy(renderer, texture, NULL, &iconRect);
