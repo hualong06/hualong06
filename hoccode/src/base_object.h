@@ -11,14 +11,6 @@ struct object {
     int width, height;
     int frameWidth;
     int frameHeight;
-    SDL_Texture* texture;
-};
-
-struct warning {
-    int x, y;
-    int width, height;
-    int frameWidth;
-    int frameHeight;
     int direction;
     SDL_Texture* texture;
 };
@@ -48,16 +40,15 @@ struct menu{
 };
 
 void initObject(object &safe, SDL_Renderer* &renderer);
-void initwarning(warning &warning_);
+void initwarning(object &warning);
 void initIcon(icon &icon_, SDL_Renderer* &renderer);
 void initMenu(menu &Menu, SDL_Renderer* &renderer);
 void initGold(icon &gold, SDL_Renderer* &renderer);
 
-void renderWarning(SDL_Renderer* &renderer, warning &warning_);
+void renderWarning(SDL_Renderer* &renderer, object &warning);
 void renderMenu(SDL_Renderer* &renderer, menu &Menu);
 void handleMenuEvents(bool &running, GameState &state);
-void renderSelectHouse(SDL_Renderer* &renderer, TTF_Font* &font);
-void renderGold(SDL_Renderer* &renderer, icon &gold);
+void renderGold(SDL_Renderer* &renderer, icon &gold, menu &Menu);
 void handleSelectHouseEvents(bool &running, GameState &state);
 void updateGold(SDL_Renderer* &renderer, player &p, tileMap &map, icon &gold);
 

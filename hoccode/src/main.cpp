@@ -5,6 +5,7 @@
 
 
 bool init(SDL_Window* &window, SDL_Renderer* &renderer) {
+    
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << endl;
         return false;
@@ -32,6 +33,7 @@ bool init(SDL_Window* &window, SDL_Renderer* &renderer) {
 }
 
 void clean(SDL_Window* &window, SDL_Renderer* &renderer, player &p, object &safe, tileMap &map, icon &icon_, menu &Menu) {
+ 
     if(p.texture != NULL) {
         SDL_DestroyTexture(p.texture);
         p.texture = NULL;
@@ -55,9 +57,10 @@ void clean(SDL_Window* &window, SDL_Renderer* &renderer, player &p, object &safe
 }
 
 void gameLoop(SDL_Window* &window, SDL_Renderer* &renderer) {
+
     player p;
     object safe;
-    warning warning_;
+    object warning;
     tileMap map;
     icon icon_;
     icon gold;
@@ -65,7 +68,7 @@ void gameLoop(SDL_Window* &window, SDL_Renderer* &renderer) {
 
     initPlayer(p, renderer);
     initObject(safe, renderer);
-    initwarning(warning_);
+    initwarning(warning);
     initTileMap(map, renderer);
     initIcon(icon_, renderer);
     initMenu(Menu, renderer);
@@ -106,13 +109,16 @@ void gameLoop(SDL_Window* &window, SDL_Renderer* &renderer) {
             
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
             SDL_RenderClear(renderer);
-            renderMap(renderer, map);
-            renderWarning(renderer, warning_);
+            renderMap(renderer, map, map.textureLayer1);
+            renderWarning(renderer, warning);
             renderPlayer(renderer, p);
-            renderGold(renderer, gold);
+            renderGold(renderer, gold, Menu);
+            renderMap(renderer, map, map.textureLayer2);
+            renderMap(renderer, map, map.textureLayer3);
+            renderMap(renderer, map, map.textureLayer4);
 
             handleEvents(running, p, new_x, new_y);
-            update(p, new_x, new_y, map, warning_);
+            update(p, new_x, new_y, map, warning);
             updateGold(renderer, p, map, gold);
 
             SDL_RenderPresent(renderer);
