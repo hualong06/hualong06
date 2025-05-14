@@ -17,4 +17,14 @@ using namespace std;
 const int SCREEN_WIDTH = 16*64;
 const int SCREEN_HEIGHT = 16*36;
 
+enum GameState {
+    MENU,
+    PLAYING,
+    SELECT_HOUSE,
+    HOUSE_MAP,
+    ENDGAME,
+    EXIT
+};
+
+
 #endif

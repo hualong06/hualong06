@@ -4,8 +4,8 @@
 #include "commonfunc.h"
 
 struct tileMap;
-struct base_object;
-struct warning;
+struct object;
+struct icon;
 
 struct player {
     int x, y;
@@ -21,8 +21,9 @@ struct player {
 };
 
 void initPlayer(player &p, SDL_Renderer* &renderer);
-void handleEvents(bool &running, player &p, int &new_x, int &new_y);
-void update(player &p, int &new_x, int &new_y, tileMap &map, object &warning);
+void handleMovement(player &p, int &new_x, int &new_y);
+bool isWalkableByMap(int x, int y, int w, int h, tileMap &map);
+void update(player &p, int &new_x, int &new_y, tileMap &map);
 void renderPlayer(SDL_Renderer* &renderer, player &p);
-
+void resetGame(SDL_Renderer* &renderer, player &p, object &warning, icon &gold, tileMap &map, GameState &state);
 #endif

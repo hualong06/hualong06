@@ -5,6 +5,7 @@
 
 struct tileMap;
 struct player;
+struct menu;
 
 struct object {
     int x, y;
@@ -25,31 +26,16 @@ struct icon {
     SDL_Texture* texture;
 };
 
-enum GameState {
-    MENU,
-    PLAYING,
-    SELECT_HOUSE,
-    HOUSE_MAP,
-    EXIT
-};
-
-struct menu{
-    SDL_Texture* textrueMap;
-    SDL_Texture* textrueMenu;
-    TTF_Font* font;
-};
-
 void initObject(object &safe, SDL_Renderer* &renderer);
 void initwarning(object &warning);
 void initIcon(icon &icon_, SDL_Renderer* &renderer);
-void initMenu(menu &Menu, SDL_Renderer* &renderer);
 void initGold(icon &gold, SDL_Renderer* &renderer);
 
 void renderWarning(SDL_Renderer* &renderer, object &warning);
-void renderMenu(SDL_Renderer* &renderer, menu &Menu);
-void handleMenuEvents(bool &running, GameState &state);
 void renderGold(SDL_Renderer* &renderer, icon &gold, menu &Menu);
-void handleSelectHouseEvents(bool &running, GameState &state);
-void updateGold(SDL_Renderer* &renderer, player &p, tileMap &map, icon &gold);
+void updateGold(SDL_Renderer* &renderer, player &p, tileMap &map, icon &gold, SDL_Event &event);
+bool checkInteraction(const SDL_Event& event);
+void checkEndGame(player &p, tileMap &map, object &warning, GameState &state, string &status);
+void renderGoldProgressBar(SDL_Renderer* &renderer, icon &gold, int totalGold);
 
 #endif

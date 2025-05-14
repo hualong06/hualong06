@@ -2,9 +2,9 @@
 #include "base_object.h"
 #include "map.h"
 #include "player.h"
+#include "gameflow.h"
 
 void initObject(object &safe, SDL_Renderer* &renderer) {
-
     safe.x = 6*64;
     safe.y = 4*64;
     safe.width = 128;
@@ -18,16 +18,14 @@ void initObject(object &safe, SDL_Renderer* &renderer) {
 }
 
 void initwarning(object &warning) {
-
-    warning.x = 334;
-    warning.y = 0;
+    warning.x = 20;
+    warning.y = 20;
     warning.width = 100;
     warning.height = 10;
     warning.direction = 0;
 }
 
 void initIcon(icon &icon_, SDL_Renderer* &renderer) {
-
     icon_.x = 7*64;
     icon_.y = 4*64;
     icon_.width = 64;
@@ -43,7 +41,6 @@ void initIcon(icon &icon_, SDL_Renderer* &renderer) {
 }
 
 void initGold(icon &gold, SDL_Renderer* &renderer){
-
     gold.x = 20;
     gold.y = 20;
     gold.width = 32;
@@ -55,185 +52,39 @@ void initGold(icon &gold, SDL_Renderer* &renderer){
     }
 }
 
-void initMenu(menu &Menu, SDL_Renderer* &renderer){
+void renderWarning(SDL_Renderer* &renderer, object &warning) {
+    static Uint32 previousTime = 0;
+    Uint32 currentTime = SDL_GetTicks();
+    Uint32 deltaTime = currentTime - previousTime;
 
-    Menu.textrueMenu = IMG_LoadTexture(renderer, "images/menu.png");
-    if(Menu.textrueMenu == NULL){
-        cerr << "Failed to load menu texture: " << IMG_GetError() << endl;        return;
-    }
-    Menu.textrueMap = IMG_LoadTexture(renderer, "images/Map.png");
-    if (Menu.textrueMap == NULL) {  
-        cerr << "Failed to load map texture: " << IMG_GetError() << endl;
-    }
-    if (TTF_Init() == -1) {
-        cerr << "Failed to initialize TTF: " << TTF_GetError() << endl;
-        return;
-    }
-    Menu.font = TTF_OpenFont("Pretty Single.otf", 24);
-    if (!Menu.font) {
-        cerr << "Failed to load font: " << TTF_GetError() << endl;
-        return;
+    warning.direction += deltaTime / 50;
+    if (warning.direction > 255) {
+        warning.direction = 255;
     }
 
-}
+    previousTime = currentTime;
 
-void renderEndGame(SDL_Renderer* &renderer, string &status) {
-    
-
-    SDL_RenderPresent(renderer);
-
-}
-
-void renderWarning(SDL_Renderer* &renderer, object &warning){
-    
     SDL_Rect warningRect = {warning.x, warning.y, warning.direction, warning.height};
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderDrawRect(renderer, &warningRect);
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &warningRect);
-
-}
-/*
-void interact(SDL_Renderer *renderer, player &p, tileMap &map, string &status, icon &icon_) {
-    if(map.gameMap[p.y/64][p.x/64] == 2) {
-        status = "True";
-        renderInteract(renderer, icon_);
-    }
-
-}
-
-void endGame(SDL_Renderer* renderer, warning &warning_, string &status, tileMap &map, player &p) {
-    if(warning_.direction > 100) {
-        status = "Game_Over";
-        renderEndGame(renderer, status);
-    }
-    else if(warning_.direction <= 100 && map.gameMap[p.y/64][p.x/64] == 9) {
-        status = "You_Win";
-        renderEngGame(renderer, status);
-    }
-
-}
-
-void renderInteract(SDL_Renderer* &renderer, icon &icon_) {
-    SDL_Rect iconRect = {icon_.x, icon_.y, icon_.width, icon_.height};
-    if(icon_.texture != NULL) {
-        SDL_Rect frameRect;
-        frameRect.w = icon_.frameWidth;
-        frameRect.h = icon_.frameHeight;
-        frameRect.x = icon_.currentFrame * icon_.frameWidth;
-        SDL_RenderCopy(renderer, icon_.texture, &frameRect, &iconRect);
-    }
-//    icon_.currentFrame = SDL_GetTicks() % icon_.frameCount;
-
-    SDL_RenderPresent(renderer);
-}
-*/
-
-void renderMenu(SDL_Renderer* &renderer, menu &Menu) {
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    SDL_Color white = {255, 255, 255, 255};
-
-    SDL_Surface* startSurface = TTF_RenderText_Solid(Menu.font, "Start", white);
-    SDL_Texture* startTexture = SDL_CreateTextureFromSurface(renderer, startSurface);
-    SDL_FreeSurface(startSurface);
-
-    SDL_Surface* exitSurface = TTF_RenderText_Solid(Menu.font, "Exit", white);
-    SDL_Texture* exitTexture = SDL_CreateTextureFromSurface(renderer, exitSurface);
-    SDL_FreeSurface(exitSurface);
-
-    SDL_Rect startRect = {300, 200, 200, 50};
-    SDL_Rect exitRect = {300, 300, 200, 50};
-    SDL_Rect menuRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-
-    SDL_RenderCopy(renderer, Menu.textrueMenu, NULL, &menuRect);
-    SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
-    SDL_RenderCopy(renderer, exitTexture, NULL, &exitRect);
-
-    SDL_DestroyTexture(startTexture);
-    SDL_DestroyTexture(exitTexture);
+    SDL_RenderDrawRect(renderer, &warningRect);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderFillRect(renderer, &warningRect);
 }
 
-void handleMenuEvents(bool &running, GameState &state) {
-
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT) {
-            running = false;
-        }
-
-        if (event.type == SDL_KEYDOWN) {
-            switch (event.key.keysym.sym) {
-                case SDLK_1:  
-                    state = SELECT_HOUSE;
-                    break;
-                case SDLK_2:  
-                    state = EXIT;
-                    break;
-            }
-        }
-    }
+bool checkInteraction(const SDL_Event& event) {
+    return event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_f;
 }
 
-void renderSelectHouse(SDL_Renderer* &renderer, menu &Menu) {
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); 
-    SDL_RenderClear(renderer);
-
-    SDL_Color white = {255, 255, 255, 255}; 
-
-    SDL_Surface* surface = TTF_RenderText_Solid(Menu.font, "Select a house location", white);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-
-    SDL_Rect textRect = {200, 50, 400, 50};
-    SDL_Rect mapRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-
-    SDL_RenderCopy(renderer, Menu.textrueMap, NULL, &mapRect);
-    SDL_RenderCopy(renderer, texture, NULL, &textRect);
-
-    SDL_DestroyTexture(texture);
-}
-
-void handleSelectHouseEvents(bool &running, GameState &state) {
-
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT) {
-            running = false;
-        }
-
-        if (event.type == SDL_MOUSEBUTTONDOWN) {
-            state = HOUSE_MAP;
-        }
-    }
-}
-
-bool checkInteraction(player &p, tileMap &map) {
-
-    int tileX = (p.x + p.width / 2) / map.tileSize;
-    int tileY = (p.y + p.height / 2) / map.tileSize;
-
-    SDL_Event event;
-    
-    if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_f) {
-        if (map.gameMap[tileY][tileX] != 0) {
-            return true; 
-        }
-    }
-
-    return false; 
-}
-
-void renderGold(SDL_Renderer* &renderer, icon &gold, menu &Menu){
+void renderGold(SDL_Renderer* &renderer, icon &gold, menu &Menu) {
+    gold.x = 20;
+    gold.y = 50;
 
     SDL_Rect goldRect = {gold.x, gold.y, gold.width, gold.height};
     SDL_RenderCopy(renderer, gold.texture, NULL, &goldRect);
 
-    string goldText = std::to_string(gold.count);
-    SDL_Color white = { 255, 255, 255, 255 };
+    string goldText = to_string(gold.count);
+    SDL_Color white = {255, 255, 255, 255};
 
     SDL_Surface* surface = TTF_RenderText_Solid(Menu.font, goldText.c_str(), white);
     if (!surface) {
@@ -252,7 +103,7 @@ void renderGold(SDL_Renderer* &renderer, icon &gold, menu &Menu){
     TTF_SizeText(Menu.font, goldText.c_str(), &textWidth, &textHeight);
 
     SDL_Rect goldCountRect = {
-        gold.x + gold.width + 16,
+        gold.x + gold.width + 10,
         gold.y + (gold.height - textHeight) / 2,
         textWidth,
         textHeight
@@ -264,20 +115,98 @@ void renderGold(SDL_Renderer* &renderer, icon &gold, menu &Menu){
     SDL_DestroyTexture(texture);
 }
 
-void updateGold(SDL_Renderer* &renderer, player &p, tileMap &map, icon &gold){
+void updateGold(SDL_Renderer* &renderer, player &p, tileMap &map, icon &gold, SDL_Event &event) {
+    int tileX = (p.x + p.width / 2 - 8) / 64;
+    int tileY = (p.y + p.height - 16) / 64;
 
-    int tileX = p.x / map.tileSize;
-    int tileY = p.y / map.tileSize;
-
-    if(map.gameMap[tileY][tileX] >= 10) {
-        SDL_Event event;
-        SDL_Texture* texture = IMG_LoadTexture(renderer, "images/TaskArrow.png");
-        SDL_Rect iconRect = { p.x, p.y, 32, 32};
-        
-        SDL_RenderCopy(renderer, texture, NULL, &iconRect);
-
-        if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_f) {
-            gold.count += map.gameMap[tileY][tileX];
+    if (tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 9) {
+        if (map.mapGold[tileY][tileX] >= 10) {
         }
+    } else {
+        cout << "Out of bounds access in mapGold: tileX=" << tileX << ", tileY=" << tileY << endl;
+    }
+
+    if (map.mapGold[tileY][tileX] > 0) {
+        SDL_Texture* texture = IMG_LoadTexture(renderer, "images/TaskArrow.png");
+        if (texture != nullptr) {
+            SDL_Rect iconRect = { p.x, p.y, 32, 32 };
+            SDL_RenderCopy(renderer, texture, NULL, &iconRect);
+
+            if (checkInteraction(event)) { 
+                gold.count += map.mapGold[tileY][tileX];
+                map.mapGold[tileY][tileX] = 0;
+            }
+            SDL_DestroyTexture(texture);
+        }
+    }
+}
+
+void renderGoldProgressBar(SDL_Renderer* &renderer, icon &gold, int totalGold) {
+    float percentage = (float)gold.count / totalGold;
+
+    int barWidth = 150;
+    int barHeight = 20;
+    int barX = gold.x;
+    int barY = gold.y + gold.height + 10;
+
+    SDL_Rect borderRect = {barX, barY, barWidth, barHeight};
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(renderer, &borderRect);
+
+    SDL_Rect fillRect = {barX, barY, (int)(barWidth * percentage), barHeight};
+    SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+    SDL_RenderFillRect(renderer, &fillRect);
+
+    string goldText = to_string(gold.count) + " / " + to_string(totalGold);
+    SDL_Color black = {0, 0, 0, 255};
+
+    TTF_Font* font = TTF_OpenFont("Pretty Single.otf", 16);
+    if (!font) {
+        cerr << "Failed to load font: " << TTF_GetError() << endl;
+        return;
+    }
+
+    SDL_Surface* surface = TTF_RenderText_Solid(font, goldText.c_str(), black);
+    if (!surface) {
+        cerr << "Failed to create surface for gold text: " << TTF_GetError() << endl;
+        TTF_CloseFont(font);
+        return;
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    if (!texture) {
+        cerr << "Failed to create texture for gold text: " << SDL_GetError() << endl;
+        TTF_CloseFont(font);
+        return;
+    }
+
+    int textWidth, textHeight;
+    TTF_SizeText(font, goldText.c_str(), &textWidth, &textHeight);
+
+    SDL_Rect textRect = {
+        barX + (barWidth - textWidth) / 2,
+        barY + (barHeight - textHeight) / 2,
+        textWidth,
+        textHeight
+    };
+
+    SDL_RenderCopy(renderer, texture, NULL, &textRect);
+
+    SDL_DestroyTexture(texture);
+    TTF_CloseFont(font);
+}
+
+void checkEndGame(player &p, tileMap &map, object &warning, GameState &state, string &status) {
+    int tileX = (p.x + p.width / 2 -8) / map.tileSize;
+    int tileY = (p.y + p.height -16) / map.tileSize;
+
+    if(map.gameMap[tileY][tileX] == 11 || warning.direction == 255) {
+        if (map.gameMap[tileY][tileX] == 11 && warning.direction < 255) {
+            status = "You Win!";
+        } else if (warning.direction == 255) {
+            status = "Game Over!";
+        }
+        state = ENDGAME;
     }
 }
